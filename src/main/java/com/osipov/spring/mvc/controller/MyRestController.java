@@ -5,6 +5,7 @@ import com.osipov.spring.mvc.exceptions.NoSuchEmployeeException;
 import com.osipov.spring.mvc.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,5 +51,15 @@ public class MyRestController {
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
         employeeService.saveEmployee(employee);
         return ResponseEntity.ok(employee);
+    }
+
+    @DeleteMapping("/employees/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable Integer id) {
+        if (employeeService.getEmployee(id) == null) {
+            throw new NoSuchEmployeeException("There is no employee with id " + id + " in database");
+        }
+
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.ok("Deleted employee with id " + id);
     }
 }
